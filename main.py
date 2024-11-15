@@ -1,7 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.pyplot import figure
 from scipy.io import loadmat
-from scipy.fft import fft, fftshift, fftfreq
+from scipy.fft import fft, fftshift, fftfreq, ifft
 
 # Esercizio 1
 data = loadmat('eeg_CP4_MI_LH_s09.mat')
@@ -13,24 +14,26 @@ segnali_split = segnali[n1:n2]
 
 #t=np.linspace(n1,n2,n2-n1)*t1
 t = np.arange(0, 4.8, t1)
-
-fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(15, 9))  # Usa subplot con variabili ax1 e ax2
+figure(figsize=(10,7))
+plt.subplot(1, 1, 1)
 
 # Primo grafico
-ax1.plot(t, segnali_split, label='Segnale $x_n$', color='#84B89F')
-ax1.set_title("Esercizio 1 \n Segnale EEG per Motor Imagery (Left Hand) al sensore CP4")
-ax1.set_xlabel("Tempo (s)")
-ax1.set_ylabel("Ampiezza")
-ax1.legend(loc='upper left')
-ax1.grid()
+plt.plot(t, segnali_split, label='Segnale $x_n$', color='#84B89F')
+plt.title("Esercizio 1 \n Segnale EEG per Motor Imagery (Left Hand) al sensore CP4")
+plt.xlabel("Tempo (s)")
+plt.ylabel("Ampiezza")
+plt.legend(loc='upper left')
+plt.grid()
 
 box = dict(boxstyle='round', facecolor='lightgrey', alpha=0.5)
 energia = sum(abs(segnali_split)**2)
-ax1.text(0.01, 0.85, f'Energia (J): {energia:.2f}', transform=ax1.transAxes, fontsize=10, bbox=box, ha='left', va='top')
+plt.text(0.01, 0.85, f'Energia (J): {energia:.2f}', fontsize=10, bbox=box, ha='left', va='top')
 
 ##################################################################################
 
 # Esercizio 2
+figure(figsize=(10,7),label='Esercizio 2')
+plt.subplot(1, 1, 1)
 data1 = loadmat('eeg_C4_MI_LH_s09.mat')
 segnali1 = data1['eeg_C4_MI_LH_s09'].flatten()
 
@@ -41,25 +44,124 @@ segnali1_split = segnali1[n1:n2]
 media = np.mean(segnali1_split)
 
 t = np.arange(0, 4.8, t1)
-ax2.plot(t, segnali1_split - media, label='Segnale $y_n$', color='#84B89F')
-ax2.set_title("Esercizio 2 \n Segnale EEG per Motor Imagery (Left Hand) al sensore C4")
-ax2.set_xlabel("Tempo (s)")
-ax2.set_ylabel("Ampiezza")
-ax2.legend(loc='upper left')
-ax2.grid()
+plt.plot(t, segnali1_split - media, label='Segnale $y_n$', color='#84B89F')
+plt.title("Esercizio 2 \n Segnale EEG per Motor Imagery (Left Hand) al sensore C4")
+plt.xlabel("Tempo (s)")
+plt.ylabel("Ampiezza")
+plt.legend(loc='upper left')
+plt.grid()
 
 energia2 = sum(abs(segnali1_split - media)**2)
-ax2.text(0.01, 0.85, f'Energia (J): {energia2:.2f}', transform=ax2.transAxes, fontsize=10, bbox=box, ha='left', va='top')
+plt.text(0.01, 0.85, f'Energia (J): {energia2:.2f}', fontsize=10, bbox=box, ha='left', va='top')
 corrcoef = np.corrcoef(segnali_split,segnali1_split)[0,1]
-print(corrcoef)
-ax2.text(0.01, 0.75, f'Coefficiente di correlazione: {corrcoef:.2f}', transform=ax2.transAxes, fontsize=10, bbox=box, ha='left', va='top')
+plt.text(0.01, 0.75, f'Coefficiente di correlazione: {corrcoef:.2f}', fontsize=10, bbox=box, ha='left', va='top')
 
-# Regola spaziatura tra i subplot
-plt.tight_layout()
-plt.subplots_adjust(hspace=0.4)
 ###########################################################################################################
 #Esercizio 3
-
+#dati trasformata
 ft=1/t1
+N=n2-n1 #Numero di campioni
+#calcolo della trasformata
+x_f=fft(segnali_split)
+#calcolo delle frequenze
+frequenze = fftfreq(N,t1)
+#applicazione del valore assoluto della trasformata
+x_f_traslata=fftshift(x_f)
+frequenze_traslata=fftshift(frequenze)
+figure(figsize=(10,7),label='Esercizio 3')
+plt.plot(frequenze_traslata,abs(x_f_traslata),label='Trasformata di $x_n$')
+plt.title("Modulo della Trasformata di Fourier del segnale $x_n$")
+plt.xlabel("Frequenza (Hz)")
+plt.ylabel("Ampiezza")
+plt.grid()
+
+#Creazione del filtro passa-banda [30,40]hz
+min_f=30
+max_f=40
+#Creo la maschera delle frequenze
+maschera= (abs(frequenze)>=min_f) & (abs(frequenze)<=max_f)
+#filtro il segnale trasformato
+x_f_filtrato= x_f*maschera
+#recupero il segnale trasformato e filtrato con l'antitrasformata
+z_n=ifft(x_f_filtrato)
+figure(figsize=(10,7),label='Esercizio 3 pt 2')
+#creo il grafico
+plt.plot(frequenze_traslata, np.abs(fftshift(x_f_filtrato)))
+plt.title("Risposta in frequenza del filtro passa banda [30, 40] Hz")
+plt.xlabel("Frequenza (Hz)")
+plt.ylabel("Ampiezza")
+plt.grid()
+
+# Visualizzazione del segnale filtrato nel dominio del tempo
+figure(figsize=(10,7),label='Esercizio 3 pt 3')
+
+plt.plot(t, np.real(z_n), label='$z_n$', color='#FF5733')
+plt.title("Segnale filtrato nel dominio del tempo $z_n$")
+plt.xlabel("Tempo (s)")
+plt.ylabel("Ampiezza")
+plt.legend()
+plt.grid()
+############################################################
+#Domanda Extra
+def calcola_energia_media_per_finestra(segnale, Nf):
+    n_finestre = len(segnale) // Nf
+    energia_media = [
+        np.sum(segnale[i * Nf:(i + 1) * Nf]**2) / Nf for i in range(n_finestre)
+    ]
+    return energia_media
+def separa_intervalli(segnale,num_campioni):
+    import math
+    num_finestre=math.ceil(len(segnale)/num_campioni)
+    energia_media=[]
+    for i in range(0,len(segnale),num_campioni):
+        fine_finestra = min(i + num_campioni, len(segnale))  # Non superare la lunghezza del segnale
+        finestra=segnale[i:fine_finestra]
+        energia_media.append(sum(j**2 for j in finestra)/num_campioni)
+    return energia_media
+Nc=500
+energia3=separa_intervalli(segnali,Nc)
+#print(len(energia3))
+tbonus= np.linspace(0,len(energia3),len(energia3))
+figure(figsize=(10,7),label='Esercizio bonus')
+plt.subplot(2,1,1)
+
+plt.plot(tbonus,energia3, label='energia media', color='#FF5733')
+plt.title("Energia media per 500 campioni di CP4 in attivo")
+plt.xlabel("Finestre")
+plt.ylabel("Energia(J)")
+plt.legend()
+plt.grid()
+
+data2=loadmat('eeg_CP4_rest_s09.mat')
+segnali2=data2['eeg_CP4_rest_s09'].flatten()
+plt.subplot(2,1,2)
+energia4=separa_intervalli(segnali2,Nc)
+tbonus= np.linspace(0,len(energia4),len(energia4))
+
+plt.plot(tbonus,energia4, label='energia media', color='blue')
+plt.title("Energia media per 500 campioni di CP4 a riposo")
+plt.xlabel('Finestre')
+plt.ylabel("Energia (J)")
+plt.legend()
+plt.subplots_adjust(hspace=0.4)
+plt.grid()
+
+#UNIONE GRAFICI
+tbonus= np.linspace(0,len(energia4),len(energia4))
+
+figure(figsize=(10,7),label='Unione bonus')
+plt.plot(tbonus,energia3[:len(energia4)], label='energia media in attivo', color='#FF5733')
+
+
+
+plt.plot(tbonus,energia4, label='energia media a riposo', color='blue')
+plt.title("Energia media per 500 campioni di CP4")
+plt.xlabel('Finestre')
+plt.ylabel("Energia (J)")
+plt.legend()
+
+
+plt.grid()
+
 
 plt.show()
