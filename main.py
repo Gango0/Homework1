@@ -103,12 +103,6 @@ plt.legend()
 plt.grid()
 ############################################################
 #Domanda Extra
-def calcola_energia_media_per_finestra(segnale, Nf):
-    n_finestre = len(segnale) // Nf
-    energia_media = [
-        np.sum(segnale[i * Nf:(i + 1) * Nf]**2) / Nf for i in range(n_finestre)
-    ]
-    return energia_media
 def separa_intervalli(segnale,num_campioni):
     import math
     num_finestre=math.ceil(len(segnale)/num_campioni)
@@ -120,7 +114,6 @@ def separa_intervalli(segnale,num_campioni):
     return energia_media
 Nc=500
 energia3=separa_intervalli(segnali,Nc)
-#print(len(energia3))
 tbonus= np.linspace(0,len(energia3),len(energia3))
 figure(figsize=(10,7),label='Esercizio bonus')
 plt.subplot(2,1,1)
