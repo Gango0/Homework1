@@ -63,7 +63,7 @@ N=n2-n1 #Numero di campioni
 #calcolo della trasformata
 x_f=fft(segnali_split)
 #calcolo delle frequenze
-frequenze = fftfreq(N,t1/N)
+frequenze = fftfreq(N,t1)
 #applicazione del valore assoluto della trasformata
 x_f_traslata=fftshift(x_f)
 frequenze_traslata=fftshift(frequenze)
