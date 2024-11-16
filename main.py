@@ -59,7 +59,6 @@ plt.text(0.01, 0.75, f'Coefficiente di correlazione: {corrcoef:.2f}', fontsize=1
 ###########################################################################################################
 #Esercizio 3
 #dati trasformata
-ft=1/t1
 N=n2-n1 #Numero di campioni
 #calcolo della trasformata
 x_f=fft(segnali_split)
