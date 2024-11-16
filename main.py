@@ -53,7 +53,7 @@ plt.grid()
 
 energia2 = sum(abs(segnali1_split - media)**2)
 plt.text(0.01, 0.85, f'Energia (J): {energia2:.2f}', fontsize=10, bbox=box, ha='left', va='top')
-corrcoef = np.corrcoef(segnali_split,segnali1_split)[0,1]
+corrcoef = np.corrcoef(segnali_split,segnali1_split-media)[0,1]
 plt.text(0.01, 0.75, f'Coefficiente di correlazione: {corrcoef:.2f}', fontsize=10, bbox=box, ha='left', va='top')
 
 ###########################################################################################################
