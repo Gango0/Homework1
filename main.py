@@ -77,7 +77,6 @@ plt.grid()
 #Creazione del filtro passa-banda [30,40]hz
 min_f=30
 max_f=40
-H = np.ones_like(x_f)
 #Creo la maschera delle frequenze
 def ideal_filter(x_f, freqs, f_low=None, f_high=None):
     H=np.ones_like(x_f)
@@ -86,15 +85,9 @@ def ideal_filter(x_f, freqs, f_low=None, f_high=None):
     if f_high is not None:
         H[np.abs(freqs)>f_high]=0
     return H
-
-
-
-maschera= (abs(H)>=min_f) & (abs(H)<=max_f)
-
-for i in H:
-    print(i)
+maschera=ideal_filter(x_f,frequenze_traslata,min_f,max_f)
 #filtro il segnale trasformato
-x_f_filtrato= x_f*ideal_filter(x_f,min_f,max_f)
+x_f_filtrato= x_f*maschera
 
 #recupero il segnale trasformato e filtrato con l'antitrasformata
 z_n=ifft(x_f_filtrato)
