@@ -78,9 +78,20 @@ plt.grid()
 min_f=30
 max_f=40
 #Creo la maschera delle frequenze
+def ideal_filter(X_f, freqs, f_low=None, f_high=None):
+    H=np.ones_like(x_f)
+    if f_low is not None:
+        H[np.abs(freqs)<f_low]=0
+    if f_high is not None:
+        H[np.abs(freqs)>f_high]=0
+    return H
+
+
+
 maschera= (abs(frequenze)>=min_f) & (abs(frequenze)<=max_f)
 #filtro il segnale trasformato
-x_f_filtrato= x_f*maschera
+x_f_filtrato= x_f*ideal_filter(x_f,min_f,max_f)
+
 #recupero il segnale trasformato e filtrato con l'antitrasformata
 z_n=ifft(x_f_filtrato)
 figure(figsize=(10,7),label='Esercizio 3 pt 2')
