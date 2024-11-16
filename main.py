@@ -38,7 +38,7 @@ figure(figsize=(10,7))
 plt.subplot(1, 1, 1)
 
 # Primo grafico
-plt.plot(t, segnali_split, label='Segnale $x_n$', color='green')
+plt.plot(t, segnali_split, label='Segnale $x_n$', color='limegreen')
 plt.title("Esercizio 1 \n Segnale EEG per Motor Imagery (Left Hand) al sensore CP4")
 plt.xlabel("Tempo (s)")
 plt.ylabel("Ampiezza")
@@ -47,8 +47,9 @@ plt.grid()
 
 box = dict(boxstyle='round', facecolor='lightgrey', alpha=0.5)
 energia = sum(abs(segnali_split)**2)
-plt.text(0.01, 0.85, f'Energia (J): {energia:.2f}', fontsize=10, bbox=box, ha='left', va='top')
 
+plt.text(-0.17, -10.67, f'Energia (J): {energia:.2f}', fontsize=10, bbox=box, ha='left', va='center')
+plt.tight_layout()
 ##################################################################################
 
 # Esercizio 2
@@ -72,9 +73,9 @@ plt.legend(loc='upper left')
 plt.grid()
 
 energia2 = sum(abs(segnali1_split - media)**2)
-plt.text(0.01, 0.85, f'Energia (J): {energia2:.2f}', fontsize=10, bbox=box, ha='left', va='top')
+plt.text(-0.17, 1.10, f'Energia (J): {energia2:.2f}', fontsize=10, bbox=box, ha='left', va='top')
 corrcoef = np.corrcoef(segnali_split,segnali1_split-media)[0,1]
-plt.text(0.01, 0.75, f'Coefficiente di correlazione: {corrcoef:.2f}', fontsize=10, bbox=box, ha='left', va='top')
+plt.text(-0.17, 0.95, f'Coefficiente di correlazione: {corrcoef:.2f}', fontsize=10, bbox=box, ha='left', va='top')
 
 ###########################################################################################################
 #Esercizio 3
@@ -88,7 +89,7 @@ frequenze = fftfreq(N,t1)
 x_f_traslata=fftshift(x_f)
 frequenze_traslata=fftshift(frequenze)
 figure(figsize=(10,7),label='Esercizio 3')
-plt.plot(frequenze_traslata,abs(x_f_traslata),label='Trasformata di $x_n$',color='darkturquoise')
+plt.plot(frequenze_traslata,abs(x_f_traslata),label='Trasformata di $x_n$',color='green')
 plt.title("Modulo della Trasformata di Fourier del segnale $x_n$")
 plt.xlabel("Frequenza (Hz)")
 plt.ylabel("Ampiezza")
