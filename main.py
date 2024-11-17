@@ -8,7 +8,7 @@ from scipy.fft import fft, fftshift, fftfreq, ifft
 def energia_media_finestra(segnale,num_campioni):
     energia_media=[]
     for i in range(0,len(segnale),num_campioni):
-        fine_finestra = min(i + num_campioni, len(segnale))  # Non superare la lunghezza del segnale
+        fine_finestra = min(i + num_campioni, len(segnale))
         finestra=segnale[i:fine_finestra]
         energia_media.append(sum(j**2 for j in finestra)/num_campioni)
     return energia_media
