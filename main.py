@@ -5,12 +5,18 @@ from scipy.io import loadmat
 from scipy.fft import fft, fftshift, fftfreq, ifft
 
 
-def energia_media_finestra(segnale,num_campioni):
+def energia_media_finestra(segnale,num_campioni,finestre_max=None):
     energia_media=[]
     for i in range(0,len(segnale),num_campioni):
         fine_finestra = min(i + num_campioni, len(segnale))
         finestra=segnale[i:fine_finestra]
-        energia_media.append(sum(j**2 for j in finestra)/num_campioni)
+        energia_media.append(sum(j**2 for j in finestra)/len(finestra))
+        #Inizio parte per controllo a parità di finestre
+        if finestre_max is not None and finestre_max-len(energia_media)==1:
+            finestra = segnale[i+num_campioni:len(segnale)]
+            energia_media.append(sum(j ** 2 for j in finestra) / len(finestra))
+            return energia_media
+        #Fine
     return energia_media
 
 #Creo la maschera delle frequenze
@@ -116,7 +122,7 @@ plt.grid()
 # Visualizzazione del segnale filtrato nel dominio del tempo
 figure(figsize=(10,10),label='Esercizio 3 pt 3',facecolor="lightcyan")
 
-plt.plot(t, np.real(z_n), label='$z_n$', color='lightskyblue',lw=0.5)
+plt.plot(t, np.real(z_n), label='Segnale $z_n$', color='lightskyblue',lw=0.5)
 plt.title("Segnale filtrato nel dominio del tempo $z_n$", fontsize=20, fontweight='bold')
 plt.xlabel("Tempo (s)",fontsize=15)
 plt.ylabel("Ampiezza",fontsize=15)
@@ -133,10 +139,10 @@ tbonus= np.linspace(0,len(energia3),len(energia3))
 
 figure(figsize=(10,10),label='Esercizio bonus',facecolor="lightcyan")
 plt.subplot(2,1,1)
-plt.plot(tbonus,energia3, label='energia media', color='crimson',lw=0.5)
-plt.title("Energia media per 500 campioni di CP4 in attivo", fontsize=20, fontweight='bold')
+plt.plot(tbonus,energia3, label='Energia media CP4', color='crimson',lw=0.5)
+plt.title("Energia media per 500 campioni di CP4", fontsize=20, fontweight='bold')
 plt.xlabel("Finestra",fontsize=15)
-plt.ylabel("Energia(J)",fontsize=15)
+plt.ylabel("Energia (J)",fontsize=15)
 plt.legend(fontsize=15)
 plt.grid()
 
@@ -146,8 +152,8 @@ plt.subplot(2,1,2)
 energia4=energia_media_finestra(segnali2,Nc)
 tbonus= np.linspace(0,len(energia4),len(energia4))
 
-plt.plot(tbonus,energia4, label='energia media', color='navy',lw=0.5)
-plt.title("Energia media per 500 campioni di CP4 a riposo", fontsize=20, fontweight='bold')
+plt.plot(tbonus,energia4, label='Energia media CP4_rest', color='navy',lw=0.5)
+plt.title("Energia media per 500 campioni di CP4_rest", fontsize=20, fontweight='bold')
 plt.xlabel('Finestra',fontsize=15)
 plt.ylabel("Energia (J)",fontsize=15)
 plt.legend(fontsize=15)
@@ -156,22 +162,23 @@ plt.grid()
 # plt.savefig("grafico_6.png", dpi=1200, bbox_inches='tight', format='png')
 
 #UNIONE GRAFICI
-tbonus= np.linspace(0,len(energia4)-1,len(energia4)-1)
-
+tbonus= np.linspace(0,len(energia3),len(energia3))
+num_campioni=len(segnali2)//len(energia3)
+energia4=energia_media_finestra(segnali2,num_campioni,len(energia3))
 figure(figsize=(10,10),label='Unione bonus',facecolor="lightcyan")
-plt.plot(tbonus,energia3[:len(energia4)-1], label='energia media in attivo', color='crimson',lw=0.5)
+plt.plot(tbonus,energia3, label='Energia media CP4', color='crimson',lw=0.5)
 
 
 
-plt.plot(tbonus,energia4[:len(energia4)-1], label='energia media a riposo', color='navy',lw=0.5)
-plt.title("Energia media per 500 campioni di CP4", fontsize=20, fontweight='bold')
+plt.plot(tbonus,energia4, label='Energia media CP4_rest', color='navy',lw=0.5)
+plt.title(f"Energia media di CP4 e CP4_rest su {len(energia3)} finestre ", fontsize=20, fontweight='bold')
 plt.xlabel('Finestra',fontsize=15)
 plt.ylabel("Energia (J)",fontsize=15)
 plt.legend(fontsize=15)
 
 
 plt.grid()
-#plt.savefig("grafico_7.png", dpi=2400, bbox_inches='tight', format='png')
+# plt.savefig("grafico_7.png", dpi=1800, bbox_inches='tight', format='png')
 
 
 plt.show()
