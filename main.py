@@ -30,8 +30,8 @@ n2 = 2800
 t1 = 0.002
 segnali_split = segnali[n1:n2]
 
-#t=np.linspace(n1,n2,n2-n1)*t1
-t = np.arange(0, 4.8, t1)
+t = np.linspace(n1, n2,n2-n1)*t1
+
 figure(figsize=(10,10),facecolor="lightcyan")
 plt.subplot(1, 1, 1)
 
@@ -46,7 +46,7 @@ plt.grid()
 box = dict(boxstyle='round', facecolor='lightgrey', alpha=0.5)
 energia = sum(abs(segnali_split)**2)
 
-plt.text(-0.17, -10.67, f'Energia: {energia:.2f} J', fontsize=15,fontweight='bold', bbox=box, ha='left', va='center')
+plt.text(0.66, -10.67, f'Energia: {energia:.2f} J', fontsize=15,fontweight='bold', bbox=box, ha='left', va='center')
 plt.tight_layout()
 # plt.savefig("grafico_1.png", dpi=1200, bbox_inches='tight', format='png')
 
@@ -58,13 +58,9 @@ plt.subplot(1, 1, 1)
 data1 = loadmat('eeg_C4_MI_LH_s09.mat')
 segnali1 = data1['eeg_C4_MI_LH_s09'].flatten()
 
-n1 = 400
-n2 = 2800
-t1 = 0.002
 segnali1_split = segnali1[n1:n2]
 media = np.mean(segnali1_split)
 
-t = np.arange(0, 4.8, t1)
 plt.plot(t, segnali1_split - media, label='Segnale $y_n$', color='#F17853',lw=0.5)
 plt.title("Segnale EEG per Motor Imagery (Left Hand) al sensore C4", fontsize=20, fontweight='bold')
 plt.xlabel("Tempo (s)",fontsize=15)
@@ -73,7 +69,7 @@ plt.legend(loc='upper left',fontsize=15)
 plt.grid()
 
 corrcoef = np.corrcoef(segnali_split,segnali1_split-media)[0,1]
-plt.text(-0.17, 1.10, f'Coefficiente di correlazione: {corrcoef:.2f}', fontsize=15, bbox=box, ha='left', va='top')
+plt.text(0.67, 1.10, f'Coefficiente di correlazione: {corrcoef:.2f}', fontsize=15, bbox=box, ha='left', va='top')
 # plt.savefig("grafico_2.png", dpi=1200, bbox_inches='tight', format='png')
 
 ###########################################################################################################
