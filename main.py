@@ -5,9 +5,7 @@ from scipy.io import loadmat
 from scipy.fft import fft, fftshift, fftfreq, ifft
 
 
-def separa_intervalli(segnale,num_campioni):
-    import math
-    num_finestre=math.ceil(len(segnale)/num_campioni)
+def energia_media_finestra(segnale,num_campioni):
     energia_media=[]
     for i in range(0,len(segnale),num_campioni):
         fine_finestra = min(i + num_campioni, len(segnale))  # Non superare la lunghezza del segnale
@@ -16,13 +14,13 @@ def separa_intervalli(segnale,num_campioni):
     return energia_media
 
 #Creo la maschera delle frequenze
-def ideal_filter(x_f, freqs, f_low=None, f_high=None):
-    H=np.ones_like(x_f)
+def crea_filtro_ideale(f_x, freqs, f_low=None, f_high=None):
+    h=np.ones_like(f_x)
     if f_low is not None:
-        H[np.abs(freqs)<f_low]=0
+        h[np.abs(freqs)<f_low]=0
     if f_high is not None:
-        H[np.abs(freqs)>f_high]=0
-    return H
+        h[np.abs(freqs)>f_high]=0
+    return h
 
 # Esercizio 1
 data = loadmat('eeg_CP4_MI_LH_s09.mat')
@@ -104,7 +102,7 @@ plt.grid()
 min_f=30
 max_f=40
 
-maschera=ideal_filter(x_f,frequenze_traslata,min_f,max_f)
+maschera=crea_filtro_ideale(x_f,frequenze_traslata,min_f,max_f)
 #filtro il segnale trasformato
 x_f_filtrato= x_f*maschera
 
@@ -134,7 +132,7 @@ plt.grid()
 #Domanda Extra
 
 Nc=500
-energia3=separa_intervalli(segnali,Nc)
+energia3=energia_media_finestra(segnali,Nc)
 tbonus= np.linspace(0,len(energia3),len(energia3))
 
 figure(figsize=(10,10),label='Esercizio bonus',facecolor="lightcyan")
@@ -149,7 +147,7 @@ plt.grid()
 data2=loadmat('eeg_CP4_rest_s09.mat')
 segnali2=data2['eeg_CP4_rest_s09'].flatten()
 plt.subplot(2,1,2)
-energia4=separa_intervalli(segnali2,Nc)
+energia4=energia_media_finestra(segnali2,Nc)
 tbonus= np.linspace(0,len(energia4),len(energia4))
 
 plt.plot(tbonus,energia4, label='energia media', color='navy',lw=0.5)
@@ -180,4 +178,4 @@ plt.grid()
 #plt.savefig("grafico_7.png", dpi=2400, bbox_inches='tight', format='png')
 
 
-# plt.show()
+plt.show()
