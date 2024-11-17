@@ -34,7 +34,7 @@ segnali_split = segnali[n1:n2]
 
 #t=np.linspace(n1,n2,n2-n1)*t1
 t = np.arange(0, 4.8, t1)
-figure(figsize=(10,10),facecolor="papayawhip")
+figure(figsize=(10,10),facecolor="lightcyan")
 plt.subplot(1, 1, 1)
 
 # Primo grafico
@@ -55,7 +55,7 @@ plt.tight_layout()
 ##################################################################################
 
 # Esercizio 2
-figure(figsize=(10,10),label='Esercizio 2',facecolor="papayawhip")
+figure(figsize=(10,10),label='Esercizio 2',facecolor="lightcyan")
 plt.subplot(1, 1, 1)
 data1 = loadmat('eeg_C4_MI_LH_s09.mat')
 segnali1 = data1['eeg_C4_MI_LH_s09'].flatten()
@@ -71,7 +71,7 @@ plt.plot(t, segnali1_split - media, label='Segnale $y_n$', color='#F17853',lw=0.
 plt.title("Segnale EEG per Motor Imagery (Left Hand) al sensore C4", fontsize=20, fontweight='bold')
 plt.xlabel("Tempo (s)",fontsize=15)
 plt.ylabel("Ampiezza",fontsize=15)
-plt.legend(loc='upper left')
+plt.legend(loc='upper left',fontsize=15)
 plt.grid()
 
 corrcoef = np.corrcoef(segnali_split,segnali1_split-media)[0,1]
@@ -89,14 +89,16 @@ frequenze = fftfreq(N,t1)
 #applicazione del valore assoluto della trasformata
 x_f_traslata=fftshift(x_f)
 frequenze_traslata=fftshift(frequenze)
-figure(figsize=(10,10),label='Esercizio 3',facecolor="papayawhip")
-plt.plot(frequenze_traslata,abs(x_f_traslata),label='Trasformata di $x_n$',color='green',lw=0.5)
+figure(figsize=(10,10),label='Esercizio 3',facecolor="lightcyan")
+plt.plot(frequenze_traslata,abs(x_f_traslata),label='Trasformata di $x_n$',color='deeppink',lw=1.5)
 plt.title("Modulo della Trasformata di Fourier del segnale $x_n$", fontsize=20, fontweight='bold')
 plt.xlabel("Frequenza (Hz)",fontsize=15)
 plt.ylabel("Ampiezza",fontsize=15)
-plt.xlim()
+# plt.xlim(-4,4)
+# plt.ylim(0,30000)
 plt.grid()
 # plt.savefig("grafico_3.png", dpi=1200, bbox_inches='tight', format='png')
+# plt.savefig("grafico_3_zoom.png", dpi=1200, bbox_inches='tight', format='png')
 
 #Creazione del filtro passa-banda [30,40]hz
 min_f=30
@@ -108,7 +110,7 @@ x_f_filtrato= x_f*maschera
 
 #recupero il segnale trasformato e filtrato con l'antitrasformata
 z_n=ifft(x_f_filtrato)
-figure(figsize=(10,10),label='Esercizio 3 pt 2',facecolor="papayawhip")
+figure(figsize=(10,10),label='Esercizio 3 pt 2',facecolor="lightcyan")
 #creo il grafico
 plt.plot(frequenze_traslata, np.abs(fftshift(x_f_filtrato)),color='goldenrod',lw=0.5)
 plt.title("Risposta in frequenza del filtro passa banda [30, 40] Hz", fontsize=20, fontweight='bold')
@@ -118,13 +120,13 @@ plt.grid()
 # plt.savefig("grafico_4.png", dpi=1200, bbox_inches='tight', format='png')
 
 # Visualizzazione del segnale filtrato nel dominio del tempo
-figure(figsize=(10,10),label='Esercizio 3 pt 3',facecolor="papayawhip")
+figure(figsize=(10,10),label='Esercizio 3 pt 3',facecolor="lightcyan")
 
 plt.plot(t, np.real(z_n), label='$z_n$', color='lightskyblue',lw=0.5)
 plt.title("Segnale filtrato nel dominio del tempo $z_n$", fontsize=20, fontweight='bold')
 plt.xlabel("Tempo (s)",fontsize=15)
 plt.ylabel("Ampiezza",fontsize=15)
-plt.legend()
+plt.legend(fontsize=15)
 plt.grid()
 # plt.savefig("grafico_5.png", dpi=1200, bbox_inches='tight', format='png')
 
@@ -135,13 +137,13 @@ Nc=500
 energia3=separa_intervalli(segnali,Nc)
 tbonus= np.linspace(0,len(energia3),len(energia3))
 
-figure(figsize=(10,10),label='Esercizio bonus',facecolor="papayawhip")
+figure(figsize=(10,10),label='Esercizio bonus',facecolor="lightcyan")
 plt.subplot(2,1,1)
 plt.plot(tbonus,energia3, label='energia media', color='crimson',lw=0.5)
 plt.title("Energia media per 500 campioni di CP4 in attivo", fontsize=20, fontweight='bold')
 plt.xlabel("Finestra",fontsize=15)
 plt.ylabel("Energia(J)",fontsize=15)
-plt.legend()
+plt.legend(fontsize=15)
 plt.grid()
 
 data2=loadmat('eeg_CP4_rest_s09.mat')
@@ -154,28 +156,28 @@ plt.plot(tbonus,energia4, label='energia media', color='navy',lw=0.5)
 plt.title("Energia media per 500 campioni di CP4 a riposo", fontsize=20, fontweight='bold')
 plt.xlabel('Finestra',fontsize=15)
 plt.ylabel("Energia (J)",fontsize=15)
-plt.legend()
+plt.legend(fontsize=15)
 plt.subplots_adjust(hspace=0.4)
 plt.grid()
 # plt.savefig("grafico_6.png", dpi=1200, bbox_inches='tight', format='png')
 
 #UNIONE GRAFICI
-tbonus= np.linspace(0,len(energia4),len(energia4))
+tbonus= np.linspace(0,len(energia4)-1,len(energia4)-1)
 
-figure(figsize=(10,10),label='Unione bonus',facecolor="papayawhip")
-plt.plot(tbonus,energia3[:len(energia4)], label='energia media in attivo', color='crimson',lw=0.5)
+figure(figsize=(10,10),label='Unione bonus',facecolor="lightcyan")
+plt.plot(tbonus,energia3[:len(energia4)-1], label='energia media in attivo', color='crimson',lw=0.5)
 
 
 
-plt.plot(tbonus,energia4, label='energia media a riposo', color='navy',lw=0.5)
+plt.plot(tbonus,energia4[:len(energia4)-1], label='energia media a riposo', color='navy',lw=0.5)
 plt.title("Energia media per 500 campioni di CP4", fontsize=20, fontweight='bold')
 plt.xlabel('Finestra',fontsize=15)
 plt.ylabel("Energia (J)",fontsize=15)
-plt.legend()
+plt.legend(fontsize=15)
 
 
 plt.grid()
-# plt.savefig("grafico_7.png", dpi=2400, bbox_inches='tight', format='png')
+#plt.savefig("grafico_7.png", dpi=2400, bbox_inches='tight', format='png')
 
 
-plt.show()
+# plt.show()
