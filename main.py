@@ -163,8 +163,8 @@ plt.grid()
 
 #UNIONE GRAFICI
 tbonus= np.linspace(0,len(energia3),len(energia3))
-num_campioni=len(segnali2)//len(energia3)
-energia4=energia_media_finestra(segnali2,num_campioni,len(energia3))
+numero_campioni=len(segnali2)//len(energia3)
+energia4=energia_media_finestra(segnali2,numero_campioni,len(energia3))
 figure(figsize=(10,10),label='Unione bonus',facecolor="lightcyan")
 plt.plot(tbonus,energia3, label='Energia media CP4', color='crimson',lw=0.5)
 
